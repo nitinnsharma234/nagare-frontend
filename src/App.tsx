@@ -1,16 +1,12 @@
-import { useState } from 'react'
-import './App.css'
+import { RouterProvider } from 'react-router'
+import router from './router.config'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-     
-    </>
+    <RouterProvider router={router}>
+
+    </RouterProvider>
   )
 }
 
