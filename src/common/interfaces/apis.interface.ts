@@ -1,20 +1,17 @@
 export interface IBaseAPI {
   url: string;
-  params?: any;
+  values?: any;
+  showToast?: boolean;
+  message?: string | undefined;
 }
 
 export interface IGetAPI extends IBaseAPI {}
 
-export interface IPostAPI extends IBaseAPI {
-  values: any;
-}
+export interface IPostAPI extends IBaseAPI {}
 
 export interface IPatchAPI extends IPostAPI {}
 
-export interface IDeleteAPI {
-  url: string;
-  values?: any;
-}
+export interface IDeleteAPI extends IBaseAPI {}
 
 export interface IAPIResponse {
   data: any;
