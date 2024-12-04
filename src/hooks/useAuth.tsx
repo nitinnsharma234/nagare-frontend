@@ -6,6 +6,7 @@ type AuthContextType = {
   user: string;
   login: (accessToken: string) => void;
   logout: () => void;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = React.createContext<AuthContextType | null>(null);
@@ -13,7 +14,7 @@ const AuthContext = React.createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useLocalStorage("user", null);
+  const [user, setUser] = useLocalStorage('user', null);
 
   // call this function when you want to authenticate the user
   const login = async (accessToken: string) => {
@@ -32,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       user,
       login,
       logout,
+      isAuthenticated: true,
     }),
     [user]
   );

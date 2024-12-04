@@ -1,8 +1,8 @@
-import Signup from "../pages/Auth/Signup";
+import Signup from '../pages/Auth/Login';
 
 const AuthApi = {
-  login: "/login",
-  signup: "/signup",
+  login: '/login',
+  signup: '/signup',
 };
 
 export default AuthApi;

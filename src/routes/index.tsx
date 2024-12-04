@@ -1,29 +1,68 @@
-import { createBrowserRouter,  } from "react-router-dom";
-import Home from "../pages/protected/Home";
-import { ProtectedRoute } from "./ProtectedRoute";
-import Signup from "../pages/Auth/Signup";
-  
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element:<ProtectedRoute>
-        <Home/>
-    </ProtectedRoute>,
-    errorElement: <h2>Create an error page here </h2>,
-    children: [
+import { useLocation, useRoutes } from 'react-router-dom';
+import MainLayout from '../layouts/dashboard';
+import { ElementType, lazy, Suspense } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import GuestGuard from '../guards/guestGard';
 
-    ],
-  },
-  {
-    path: "/login",
-    element:<Signup/>,
-    errorElement: <h2>Create an error page here </h2>,
-    children: [
+import AuthGuard from '../guards/AuthGuard';
 
-    ],
-  },
-]);
-export default router;
+const Loadable = (Component: ElementType) => (props: any) => {
+  // const { pathname } = useLocation();
 
+  // const { isAuthenticated } = useAuth();
 
+  return (
+    <Suspense
+      fallback={
+        <>
+          <p>Loading...</p>
+        </>
+      }
+    >
+      <Component {...props} />
+    </Suspense>
+  );
+};
 
+export default function Router() {
+  const { isAuthenticated } = useAuth();
+
+  return useRoutes([
+    {
+      path: 'auth',
+      children: [
+        {
+          path: 'login',
+          element: (
+            <GuestGuard>
+              <Login />
+            </GuestGuard>
+          ),
+        },
+        {
+          path: 'signup',
+          element: (
+            <GuestGuard>
+              <Signup />
+            </GuestGuard>
+          ),
+        },
+      ],
+    },
+    {
+      path: 'dashboard',
+      element: (
+        <AuthGuard>
+          <MainLayout />
+        </AuthGuard>
+      ),
+      children: [],
+    },
+  ]);
+}
+
+//========================================
+
+//auth
+const Login = Loadable(lazy(() => import('../pages/Auth/Login')));
+const Signup = Loadable(lazy(() => import('../pages/Auth/Signup')));
