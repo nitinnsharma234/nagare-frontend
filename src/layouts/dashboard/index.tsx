@@ -6,11 +6,11 @@ export default function MainLayout() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  // const isHome = pathname === '/';
+  const isHome = pathname === '/';
 
-  // if (!isHome) {
-  //   return navigate('/dashboard');
-  // }
+  if (isHome) {
+    return navigate('/dashboard');
+  }
 
   return (
     <div>

@@ -1,6 +1,11 @@
-import { Navigate, useLocation, useRoutes } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useRoutes,
+} from 'react-router-dom';
 import MainLayout from '../layouts/dashboard';
-import { ElementType, lazy, Suspense } from 'react';
+import { ElementType, lazy, Suspense, useEffect } from 'react';
 import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGard';
 import useAuth from '../hooks/useAuth';
@@ -28,6 +33,17 @@ const Loadable = (Component: ElementType) => (props: any) => {
 };
 
 export default function Router() {
+  const { pathname } = useLocation();
+  console.log('🚀 ~ Router ~ pathname:', pathname);
+  const navigate = useNavigate();
+
+  const isHome = pathname === '/';
+  useEffect(() => {
+    if (isHome) {
+      return navigate('/dashboard');
+    }
+  }, []);
+
   //const DEFAULT_PATH = Dash ? PATH_AFTER_LOGIN : PATH_DASHBOARD.root;
 
   return useRoutes([
