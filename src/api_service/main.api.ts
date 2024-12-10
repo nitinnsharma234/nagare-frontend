@@ -103,6 +103,7 @@ const handleAPIReturn = async (
   } catch (error: any) {
     console.log(error);
     const { data } = error.response;
+    console.log('🚀 ~ data:', data);
     if (showToast) {
       toast.error(
         message || data?.message ? data?.message : EmptyBadRequest.message

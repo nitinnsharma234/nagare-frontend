@@ -1,15 +1,18 @@
-import { useLocation, useRoutes } from 'react-router-dom';
+import { Navigate, useLocation, useRoutes } from 'react-router-dom';
 import MainLayout from '../layouts/dashboard';
 import { ElementType, lazy, Suspense } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import GuestGuard from '../guards/guestGard';
-
 import AuthGuard from '../guards/AuthGuard';
+import GuestGuard from '../guards/GuestGard';
+import useAuth from '../hooks/useAuth';
+import { PATH_AFTER_LOGIN } from '../config';
+import { PATH_DASHBOARD } from './path';
 
 const Loadable = (Component: ElementType) => (props: any) => {
-  // const { pathname } = useLocation();
+  const { pathname } = useLocation();
 
-  // const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
+
+  const isDashboard = pathname.includes('/dashboard') && isAuthenticated;
 
   return (
     <Suspense
@@ -25,7 +28,7 @@ const Loadable = (Component: ElementType) => (props: any) => {
 };
 
 export default function Router() {
-  const { isAuthenticated } = useAuth();
+  //const DEFAULT_PATH = Dash ? PATH_AFTER_LOGIN : PATH_DASHBOARD.root;
 
   return useRoutes([
     {
@@ -56,7 +59,12 @@ export default function Router() {
           <MainLayout />
         </AuthGuard>
       ),
-      children: [],
+      children: [
+        {
+          path: 'homes',
+          element: <Home />,
+        },
+      ],
     },
   ]);
 }
@@ -66,3 +74,6 @@ export default function Router() {
 //auth
 const Login = Loadable(lazy(() => import('../pages/Auth/Login')));
 const Signup = Loadable(lazy(() => import('../pages/Auth/Signup')));
+
+//dashboard
+const Home = Loadable(lazy(() => import('../pages/dashboard/index')));

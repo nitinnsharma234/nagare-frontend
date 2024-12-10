@@ -1,49 +1,11 @@
-import React from "react";
-import { createContext, useContext, useMemo } from "react";
-import { useLocalStorage } from "./useLocalStorage";
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
-type AuthContextType = {
-  user: string;
-  login: (accessToken: string) => void;
-  logout: () => void;
-  isAuthenticated: boolean;
-};
-
-const AuthContext = React.createContext<AuthContextType | null>(null);
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [user, setUser] = useLocalStorage('user', null);
-
-  // call this function when you want to authenticate the user
-  const login = async (accessToken: string) => {
-    setUser(accessToken);
-    //   navigate("/profile");
-  };
-
-  // call this function to sign out logged in user
-  const logout = () => {
-    setUser(null);
-    //   navigate("/", { replace: true });
-  };
-
-  const value = useMemo(
-    () => ({
-      user,
-      login,
-      logout,
-      isAuthenticated: true,
-    }),
-    [user]
-  );
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = (): AuthContextType => {
+const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error('Auth context must required');
+
   return context;
 };
+
+export default useAuth;

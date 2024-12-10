@@ -1,27 +1,31 @@
-import { useState, ReactNode } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useState, useEffect, ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import Login from '../pages/Auth/Login';
 import toast from 'react-hot-toast';
-
-// ----------------------------------------------------------------------
+import useAuth from '../hooks/useAuth';
 
 type AuthGuardProps = {
   children: ReactNode;
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
 
   const { pathname } = useLocation();
-  console.log('🚀 ~ AuthGuard ~ pathname:', pathname);
 
   const [requestedLocation, setRequestedLocation] = useState<string | null>(
     null
   );
 
+  if (!isInitialized) {
+    return (
+      <div>
+        <p>loading Initialized</p>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
-    toast.error('login required');
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
@@ -29,7 +33,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (requestedLocation && pathname !== requestedLocation) {
-    toast.error('login required2');
     setRequestedLocation(null);
     return <Navigate to={requestedLocation} />;
   }
